@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain_qdrant import QdrantVectorStore
+from langchain_community.document_loaders import PyPDFLoader # PDF loader
+from langchain_text_splitters import RecursiveCharacterTextSplitter # for chinking the documents
+from langchain_google_genai import GoogleGenerativeAIEmbeddings #Embedding model
+from langchain_qdrant import QdrantVectorStore      # Vector database    
 from pathlib import Path
 
 load_dotenv()
@@ -20,10 +20,11 @@ docs = loader.load()
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=400)
 chunks = text_splitter.split_documents(documents=docs)
 
-# creating vector embedding of the chunks and storing it in the vector database
 
+# create embedding model
 embeddings_model = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 
+# create and store the embeddings in the vector database
 vector_store = QdrantVectorStore.from_documents(
     documents=chunks,
     embedding=embeddings_model,
